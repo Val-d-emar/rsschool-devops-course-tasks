@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: terraform fmt check
         uses: hashicorp/setup-terraform@v2
-        with: { terraform_version: 1.6.0 }
+        with: { terraform_version: 1.12.0 }
       - run: terraform fmt -recursive
       - run: terraform fmt -check
 
@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v2
-        with: { terraform_version: 1.6.0 }
+        with: { terraform_version: 1.12.0 }
       - name: Configure AWS credentials from role
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -45,7 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v2
-        with: { terraform_version: 1.6.0 }
+        with: { terraform_version: 1.12.0 }
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
