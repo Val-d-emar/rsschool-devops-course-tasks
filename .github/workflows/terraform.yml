@@ -37,6 +37,11 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       - run: terraform init
       - run: terraform plan -out=tfplan
+      - name: Upload tfplan
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan
+          path: tfplan
 
   terraform-apply:
     #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -51,6 +56,10 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_GITHUB_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
+      - name: Download tfplan
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan
       - run: terraform init
       - run: terraform apply -auto-approve tfplan
 
