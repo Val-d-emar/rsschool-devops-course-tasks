@@ -1,7 +1,7 @@
 # [DevOps Course](https://github.com/rolling-scopes-school/tasks/tree/master/devops)
 The course aims to offer in-depth knowledge of DevOps principles and essential AWS services necessary for efficient automation and infrastructure management. Participants will gain practical skills in setting up, deploying, and managing Kubernetes clusters on AWS, using tools like K3s and Terraform, Jenkins and monitoring tools.
 
-~~~
+```text
  Repository Structure
 .
 ├── main.tf              # Terraform backend & provider
@@ -9,9 +9,10 @@ The course aims to offer in-depth knowledge of DevOps principles and essential A
 ├── s3_backend.tf        # S3 bucket, versioning, encryption, ownership
 ├── tf.plan.txt          # Terraform plan first output
 ├── tf.apply.txt         # Terraform apply first output
-├── screenshots/*        # screenshots of tasks pass
+├── screenshots/*        # Screenshots of tasks pass
+├── bootstrap/*          # Terraform configuration for Setup IAM & OIDC and save state S3 Backet
 └── .github/workflows/terraform.yml  # CI/CD pipeline via GitHub Actions
-~~~
+```
 
 # Additional Tasks: Infrastructure Documentation
 
@@ -45,15 +46,16 @@ This repository contains Terraform code and a GitHub Actions CI/CD pipeline for 
    - `terraform-plan`: runs `terraform init` and `terraform plan`
    - `terraform-apply`: runs `terraform apply` only on `main` branch
 
-## Setup & Usage
+## Setup & Usage (see bootstrap folder too)
 
-1. Install **AWS CLI v2** and **Terraform 1.6+**
-1. Create AWS IAM user with required permissions and enable MFA
-1. Create GithubActions Role with required AWS policies
-1. Creates Backet with required AWS policies
-1. Run:
+1. Install **AWS CLI v2** and **Terraform 1.10+**
+1. Create AWS IAM user with required permissions and enable MFA [instruction](bootstrap/README.md)
+1. Create GithubActions Role with required AWS policies [instruction](bootstrap/README.md)
+1. Creates Backet with required AWS policies [instruction](bootstrap/README.md)
+1. To deploy main Infrastructure Run:
    ```bash
    aws configure
    terraform init
    terraform plan -out=tfplan
    terraform apply tfplan
+   ```

@@ -5,7 +5,7 @@ variable "ami_id" {
   # Используйте актуальный AMI ID для вашего региона (например, Amazon Linux 2 AMI)
   # Убедитесь, что AMI ID соответствует вашему региону AWS.
   # Вы можете найти актуальные AMI ID в консоли AWS EC2 или в AWS CLI.
-  default     = "ami-0548d28d4f7ec72c5"
+  default = "ami-0548d28d4f7ec72c5"
 }
 
 # Переменная для типа экземпляра EC2
@@ -21,6 +21,6 @@ variable "region" {
 }
 
 variable "state_bucket" {
-  type = string
+  type    = string
   default = "mybucketterraformname"
 }
