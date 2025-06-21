@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+env:
+  AWS_REGION: eu-north-1
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: terraform fmt check
+        uses: hashicorp/setup-terraform@v2
+        with: { terraform_version: 1.12.0 }
+      #- run: terraform fmt -recursive
+      - run: terraform fmt -check
+
+  terraform-plan:
+    needs: terraform-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v2
+        with: { terraform_version: 1.12.0 }
+      - name: Configure AWS credentials from role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - run: terraform init
+      - run: terraform plan -out=tfplan
+      - name: Upload tfplan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: tfplan
+
+  terraform-apply:
+    #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v2
+        with: { terraform_version: 1.12.0 }
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Download tfplan
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: ./
+      - run: terraform init
+      - run: terraform apply -auto-approve tfplan
+
